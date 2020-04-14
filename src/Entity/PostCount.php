@@ -60,6 +60,6 @@ class PostCount
 
     public function incrementPostCount(): void
     {
-        $this->postCount ++;
+        $this->postCount++;
     }
 }
