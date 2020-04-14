@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use DateTimeInterface as DateTimeInterfaceAlias;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -95,7 +96,7 @@ class Article
      */
     public function prePersist()
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         $this->setCreatedAt($now);
         $this->setUpdatedAt($now);
     }
