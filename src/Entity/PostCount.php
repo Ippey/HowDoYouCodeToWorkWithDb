@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,12 +35,12 @@ class PostCount
         return $this->id;
     }
 
-    public function getPostDate(): ?\DateTimeInterface
+    public function getPostDate(): ?DateTimeInterface
     {
         return $this->postDate;
     }
 
-    public function setPostDate(\DateTimeInterface $postDate): self
+    public function setPostDate(DateTimeInterface $postDate): self
     {
         $this->postDate = $postDate;
 
