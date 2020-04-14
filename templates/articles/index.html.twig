@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticlesController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <h1>記事リスト</h1>
+        <div class="row justify-content-end mt-1 mb-1">
+            <div class="col-md-4">
+                <a href="{{ url('articles_new') }}" class="btn btn-info btn-block">新規登録</a>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>お名前</th>
+                <th>本文</th>
+                <th>登録日</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td>{{ article.id }}</td>
+                    <td>{{ article.name }}</td>
+                    <td>{{ article.body }}</td>
+                    <td>{{ article.createdAt|date('Y/m/d') }}</td>
+                </tr>
+            {% endfor %}
+            <tr></tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
