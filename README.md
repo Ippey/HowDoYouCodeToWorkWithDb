@@ -30,6 +30,8 @@ bin/console doctrine:schema:update --force
 symfony local:server:start
 ```
 
+URL: http://localhost:8000/articles
+
 ### このプロジェクトの構築について
 このプロジェクトでは、Symfony公式ドキュメントと同様のやり方で、ControllerでEntityManager、RepositoryをgetしてDB操作を行っています。
 
