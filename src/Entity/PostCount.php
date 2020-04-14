@@ -57,4 +57,9 @@ class PostCount
 
         return $this;
     }
+
+    public function incrementPostCount(): void
+    {
+        $this->postCount ++;
+    }
 }
