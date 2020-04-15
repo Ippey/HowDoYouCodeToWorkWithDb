@@ -19,6 +19,25 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    public function findPostCountByDate(string $after = null, string $before = null)
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->select('date_format(a.createdAt, \'%Y-%m-%d\') as date', 'COUNT(a.id) as count')
+            ->groupBy('date')
+            ->orderBy('a.createdAt', 'asc')
+        ;
+
+        if ($after) {
+            $qb->andWhere('a.createdAt >= :after')->setParameter('after', new \DateTime($after));
+        }
+
+        if ($before) {
+            $qb->andWhere('a.createdAt <= :before')->setParameter('before', new \DateTime($before));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Article[] Returns an array of Article objects
     //  */

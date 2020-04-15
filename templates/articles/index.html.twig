@@ -37,5 +37,17 @@
             <tr></tr>
             </tbody>
         </table>
+
+        <h1>日付ごとの投稿数</h1>
+        <table class="table">
+            <tbody>
+            {% for postCount in postCounts %}
+            <tr>
+                <th>{{ postCount.date|date('Y/m/d') }}</th>
+                <td>{{ postCount.count }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}
