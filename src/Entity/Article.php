@@ -23,6 +23,7 @@ class Article implements TimestampableInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      * @Assert\NotBlank
      * @Assert\Length(max=255)
      */
@@ -30,6 +31,8 @@ class Article implements TimestampableInterface
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @Assert\NotBlank
      * @Assert\Length(max=1000)
      */
     private $body;
