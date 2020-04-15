@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use Acme\Component\TransactionManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -13,9 +12,6 @@ class TransactionManager implements TransactionManagerInterface
      */
     private $entityManager;
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -28,12 +24,11 @@ class TransactionManager implements TransactionManagerInterface
 
     public function commit(): void
     {
-        $this->entityManager->commit();;
+        $this->entityManager->commit();
     }
 
     public function rollback(): void
     {
         $this->entityManager->rollback();
     }
-
 }

@@ -19,10 +19,6 @@ final class PostCountRepository implements PostCountRepositoryInterface
      */
     private $entityManager;
 
-    /**
-     * @param DoctrinePostCountRepository $doctrineRepository
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(DoctrinePostCountRepository $doctrineRepository, EntityManagerInterface $entityManager)
     {
         $this->doctrineRepository = $doctrineRepository;
