@@ -5,6 +5,7 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "beberlei/doctrineextensions": "^1.2",
         "knplabs/doctrine-behaviors": "^2.0",
         "symfony/asset": "5.0.*",
         "symfony/console": "5.0.*",

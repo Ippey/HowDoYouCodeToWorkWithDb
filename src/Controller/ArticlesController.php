@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\PostCount;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
-use App\Repository\PostCountRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,16 +37,18 @@ class ArticlesController extends AbstractController
     public function index()
     {
         $articles = $this->repository->findAll();
+        $postCounts = $this->repository->findPostCountByDate();
 
         return $this->render('articles/index.html.twig', [
             'articles' => $articles,
+            'postCounts' => $postCounts,
         ]);
     }
 
     /**
      * @Route("/new", name="new")
      */
-    public function new(Request $request, PostCountRepository $postCountRepository)
+    public function new(Request $request)
     {
         $article = new Article();
 
@@ -57,19 +56,8 @@ class ArticlesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->em->persist($article);
-
-            $postCount = $postCountRepository->findOneBy([
-                'postDate' => new DateTime(),
-            ]);
-
-            if (empty($postCount)) {
-                $postCount = new PostCount();
-                $postCount->setPostDate(new DateTime());
-                $this->em->persist($postCount);
-            }
-
-            $postCount->setPostCount($postCount->getPostCount() + 1);
             $this->em->flush();
 
             $this->addFlash('success', '登録しました');
