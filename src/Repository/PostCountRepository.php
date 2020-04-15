@@ -2,49 +2,46 @@
 
 namespace App\Repository;
 
-use App\Entity\PostCount;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Acme\PostCount\Model\Exception\PostCountNotFoundException;
+use Acme\PostCount\Model\PostCount;
+use Acme\PostCount\Model\PostCountRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * @method PostCount|null find($id, $lockMode = null, $lockVersion = null)
- * @method PostCount|null findOneBy(array $criteria, array $orderBy = null)
- * @method PostCount[]    findAll()
- * @method PostCount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class PostCountRepository extends ServiceEntityRepository
+final class PostCountRepository implements PostCountRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var DoctrinePostCountRepository
+     */
+    private $doctrineRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(DoctrinePostCountRepository $doctrineRepository, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, PostCount::class);
+        $this->doctrineRepository = $doctrineRepository;
+        $this->entityManager = $entityManager;
     }
 
-    // /**
-    //  * @return PostCount[] Returns an array of PostCount objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function add(PostCount $postCount): void
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $this->entityManager->persist($postCount);
+        $this->entityManager->flush($postCount);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?PostCount
+    public function update(PostCount $postCount): void
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->entityManager->flush($postCount);
     }
-    */
+
+    public function find(\DateTime $dateTime): PostCount
+    {
+        $postCount = $this->doctrineRepository->findOneBy(['postDate' => $dateTime]);
+        if ($postCount instanceof PostCount) {
+            return $postCount;
+        }
+        throw new PostCountNotFoundException('entity not found');
+    }
 }

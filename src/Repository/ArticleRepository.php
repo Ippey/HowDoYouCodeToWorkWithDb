@@ -2,49 +2,47 @@
 
 namespace App\Repository;
 
-use App\Entity\Article;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Acme\Article\Model\Article;
+use Acme\Article\Model\ArticleRepositoryInterface;
+use Acme\Article\Model\Exception\ArticleNotFoundException;
+use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * @method Article|null find($id, $lockMode = null, $lockVersion = null)
- * @method Article|null findOneBy(array $criteria, array $orderBy = null)
- * @method Article[]    findAll()
- * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
-class ArticleRepository extends ServiceEntityRepository
+class ArticleRepository implements ArticleRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var DoctrineArticleRepository
+     */
+    private $doctrineRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(DoctrineArticleRepository $doctrineRepository, EntityManagerInterface $entityManager)
     {
-        parent::__construct($registry, Article::class);
+        $this->doctrineRepository = $doctrineRepository;
+        $this->entityManager = $entityManager;
     }
 
-    // /**
-    //  * @return Article[] Returns an array of Article objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function add(Article $article): void
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $this->entityManager->persist($article);
+        $this->entityManager->flush($article);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Article
+    public function update(Article $article): void
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->entityManager->flush($article);
     }
-    */
+
+    public function find(int $id): Article
+    {
+        $article = $this->doctrineRepository->find($id);
+        if ($article instanceof Article) {
+            return $article;
+        }
+
+        throw new ArticleNotFoundException("${$id} not found");
+    }
 }

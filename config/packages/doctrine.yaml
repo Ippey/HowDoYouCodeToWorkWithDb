@@ -16,3 +16,14 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            AcmeArticle:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/packages/Article/src/Model'
+                prefix: Acme\Article\Model
+            AcmePostCount:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/packages/PostCount/src/Model'
+                prefix: Acme\PostCount\Model
+

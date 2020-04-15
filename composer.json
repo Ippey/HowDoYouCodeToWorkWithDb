@@ -29,12 +29,18 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Acme\\Article\\": "packages/Article/src",
+            "Acme\\PostCount\\": "packages/PostCount/src",
+            "Acme\\Component\\": "packages/Component/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/",
+            "Acme\\Article\\Tests\\": "packages/Article/tests",
+            "Acme\\PostCount\\Tests\\": "packages/PostCount/tests"
+
         }
     },
     "replace": {

@@ -25,3 +25,7 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    Acme\Component\TransactionManagerInterface: '@App\TransactionManager'
+    Acme\Article\Model\ArticleRepositoryInterface: '@App\Repository\ArticleRepository'
+    Acme\PostCount\Model\PostCountRepositoryInterface: '@App\Repository\PostCountRepository'
