@@ -12,7 +12,7 @@
         "symfony/form": "5.0.*",
         "symfony/framework-bundle": "5.0.*",
         "symfony/orm-pack": "^1.0",
-        "symfony/security-rf": "5.0.*",
+        "symfony/security-csrf": "5.0.*",
         "symfony/twig-pack": "^1.0",
         "symfony/validator": "5.0.*",
         "symfony/webpack-encore-bundle": "^1.7",
