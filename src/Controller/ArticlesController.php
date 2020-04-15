@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Article;
-use App\Entity\PostCount;
+use Acme\Article\UseCase\CreateArticle;
 use App\Form\ArticleType;
-use App\Repository\PostCountRepository;
-use DateTime;
+use App\Repository\DoctrineArticleRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,12 +15,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticlesController extends AbstractController
 {
     /**
+     * @var DoctrineArticleRepository
+     */
+    private $doctrineArticleRepository;
+
+    /**
+     * @var CreateArticle
+     */
+    private $createArticle;
+
+    public function __construct(DoctrineArticleRepository $doctrineArticleRepository, CreateArticle $createArticle)
+    {
+        $this->doctrineArticleRepository = $doctrineArticleRepository;
+        $this->createArticle = $createArticle;
+    }
+
+    /**
      * @Route("/articles", name="articles")
      */
-    public function index()
+    public function index(): Response
     {
-        $articleRepository = $this->getDoctrine()->getRepository(Article::class);
-        $articles = $articleRepository->findAll();
+        $articles = $this->doctrineArticleRepository->findAll();
+
         return $this->render('articles/index.html.twig', [
             'articles' => $articles,
         ]);
@@ -30,34 +44,16 @@ class ArticlesController extends AbstractController
 
     /**
      * @Route("/articles/new", name="articles_new")
-     * @param Request $request
-     * @return RedirectResponse|Response
-     * @throws Exception
      */
-    public function new(Request $request)
+    public function new(Request $request): Response
     {
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(ArticleType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $article = $form->getData();
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($article);
-            /** @var PostCountRepository $postCountRepository */
-            $postCountRepository = $this->getDoctrine()->getRepository(PostCount::class);
-            $postCount = $postCountRepository->findOneBy([
-                'postDate' => new DateTime(),
-            ]);
-            if (empty($postCount)) {
-                $postCount = new PostCount();
-                $postCount->setPostDate(new DateTime());
-                $entityManager->persist($postCount);
-            }
-            $postCount->setPostCount($postCount->getPostCount() + 1);
-            $entityManager->flush();
-
+            ($this->createArticle)($form->getData()['name'], $form->getData()['body']);
             $this->addFlash('success', '登録しました');
+
             return $this->redirectToRoute('articles');
         }
 

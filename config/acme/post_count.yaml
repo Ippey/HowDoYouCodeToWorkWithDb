@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+
+    Acme\PostCount\:
+        resource: '../../packages/PostCount/src/*'
+        exclude: [
+            '../../packages/PostCount/src/Model/PostCount.php',
+            '../../packages/PostCount/src/Model/Exception'
+        ]

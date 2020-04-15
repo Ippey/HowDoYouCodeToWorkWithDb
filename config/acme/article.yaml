@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+
+    Acme\Article\:
+        resource: '../../packages/Article/src/*'
+        exclude: [
+            '../../packages/Article/src/Model/Article.php',
+            '../../packages/Article/src/Model/ArticleCreatedEvent.php'
+            '../../packages/Article/src/Model/Exception'
+        ]
+
