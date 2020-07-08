@@ -8,6 +8,7 @@ use App\Form\ArticleType;
 use App\Repository\PostCountRepository;
 use DateTime;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,20 +19,24 @@ class ArticlesController extends AbstractController
 {
     /**
      * @Route("/articles", name="articles")
+     * @Template()
+     * @return array
      */
     public function index()
     {
         $articleRepository = $this->getDoctrine()->getRepository(Article::class);
         $articles = $articleRepository->findAll();
-        return $this->render('articles/index.html.twig', [
+
+        return [
             'articles' => $articles,
-        ]);
+        ];
     }
 
     /**
      * @Route("/articles/new", name="articles_new")
+     * @Template
      * @param Request $request
-     * @return RedirectResponse|Response
+     * @return RedirectResponse|array
      * @throws Exception
      */
     public function new(Request $request)
@@ -61,8 +66,8 @@ class ArticlesController extends AbstractController
             return $this->redirectToRoute('articles');
         }
 
-        return $this->render('articles/new.html.twig', [
+        return [
             'form' => $form->createView(),
-        ]);
+        ];
     }
 }
