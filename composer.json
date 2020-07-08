@@ -20,7 +20,11 @@
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.15"
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "liip/test-fixtures-bundle": "^1.9",
+        "nelmio/alice": "^3.7",
+        "symfony/maker-bundle": "^1.15",
+        "theofidry/alice-data-fixtures": "^1.2"
     },
     "config": {
         "preferred-install": {
