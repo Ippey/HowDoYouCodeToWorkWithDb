@@ -49,7 +49,7 @@ class Article implements ArticleInterface
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): ArticleInterface
     {
         $this->name = $name;
 
@@ -61,7 +61,7 @@ class Article implements ArticleInterface
         return $this->body;
     }
 
-    public function setBody(string $body): self
+    public function setBody(string $body): ArticleInterface
     {
         $this->body = $body;
 
