@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Entity\PostCount;
 use App\Form\ArticleType;
 use App\Repository\PostCountRepository;
+use App\Service\UseCase\Article\RegisterUseCase;
 use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -17,6 +18,19 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticlesController extends AbstractController
 {
+    /**
+     * @var RegisterUseCase
+     */
+    private $registerUseCase;
+
+    /**
+     * @param RegisterUseCase $registerUseCase
+     */
+    public function __construct(RegisterUseCase $registerUseCase)
+    {
+        $this->registerUseCase = $registerUseCase;
+    }
+
     /**
      * @Route("/articles", name="articles")
      * @Template()
@@ -41,26 +55,12 @@ class ArticlesController extends AbstractController
      */
     public function new(Request $request)
     {
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
+        $form = $this->createForm(ArticleType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $article = $form->getData();
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($article);
-            /** @var PostCountRepository $postCountRepository */
-            $postCountRepository = $this->getDoctrine()->getRepository(PostCount::class);
-            $postCount = $postCountRepository->findOneBy([
-                'postDate' => new DateTime(),
-            ]);
-            if (empty($postCount)) {
-                $postCount = new PostCount();
-                $postCount->setPostDate(new DateTime());
-                $entityManager->persist($postCount);
-            }
-            $postCount->setPostCount($postCount->getPostCount() + 1);
-            $entityManager->flush();
+            $this->registerUseCase->register($article);
 
             $this->addFlash('success', '登録しました');
             return $this->redirectToRoute('articles');
