@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\PostCountInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\UniqueConstraint(columns={"post_date"}
  * )})
  */
-class PostCount
+class PostCount implements PostCountInterface
 {
     /**
      * @ORM\Id()
@@ -56,5 +57,10 @@ class PostCount
         $this->postCount = $postCount;
 
         return $this;
+    }
+
+    public function countUp(): void
+    {
+        $this->postCount++;
     }
 }

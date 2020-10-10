@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
+use App\Model\ArticleInterface;
 use DateTimeInterface as DateTimeInterfaceAlias;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Article
+class Article implements ArticleInterface
 {
     /**
      * @ORM\Id()
@@ -21,14 +21,11 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     * @Assert\Length(max=255)
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
-     * @Assert\Length(max=1000)
      */
     private $body;
 
@@ -52,7 +49,7 @@ class Article
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): ArticleInterface
     {
         $this->name = $name;
 
@@ -64,7 +61,7 @@ class Article
         return $this->body;
     }
 
-    public function setBody(string $body): self
+    public function setBody(string $body): ArticleInterface
     {
         $this->body = $body;
 
