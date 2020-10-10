@@ -4,6 +4,7 @@ namespace App\Service\UseCase\Article;
 
 use App\DTO\Request\PostedArticle;
 use App\Entity\Article;
+use App\Model\ArticleCounterInterface;
 use App\Model\ArticlePersisterInterface;
 use App\Service\UseCase\Article\Exception\RegisterException;
 
@@ -15,11 +16,18 @@ class RegisterUseCase
     private $articlePersister;
 
     /**
-     * @param ArticlePersisterInterface $articlePersister
+     * @var ArticleCounterInterface
      */
-    public function __construct(ArticlePersisterInterface $articlePersister)
+    private $articleCounter;
+
+    /**
+     * @param ArticlePersisterInterface $articlePersister
+     * @param ArticleCounterInterface $articleCounter
+     */
+    public function __construct(ArticlePersisterInterface $articlePersister, ArticleCounterInterface $articleCounter)
     {
         $this->articlePersister = $articlePersister;
+        $this->articleCounter = $articleCounter;
     }
 
     /**
@@ -29,9 +37,11 @@ class RegisterUseCase
     public function register(PostedArticle $postedArticle): void
     {
         try {
-            $this->articlePersister->persist($postedArticle, new Article());
+            $savedArticle = $this->articlePersister->persist($postedArticle, new Article());
         } catch (\Exception $e) {
-            throw new RegisterException($e->getMessage(), '', $e);
+            throw new RegisterException($e->getMessage(), $e->getCode(), $e);
         }
+
+        $this->articleCounter->count($savedArticle);
     }
 }
