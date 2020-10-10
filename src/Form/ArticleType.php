@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Article;
+use App\DTO\Request\PostedArticle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -24,7 +24,7 @@ class ArticleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Article::class,
+            'data_class' => PostedArticle::class,
         ]);
     }
 }
