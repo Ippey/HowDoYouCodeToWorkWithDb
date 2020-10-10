@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\PostCount;
+use App\Model\PostCountFinderInterface;
+use App\Model\PostCountInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,11 +14,27 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method PostCount[]    findAll()
  * @method PostCount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PostCountRepository extends ServiceEntityRepository
+class PostCountRepository extends ServiceEntityRepository implements PostCountFinderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, PostCount::class);
+    }
+
+    public function findOneByPostDateOrCreate(\DateTimeInterface $postedDate): PostCountInterface
+    {
+        $targetCount = $this->findOneBy([
+            'postDate' => $postedDate,
+        ]);
+        if (!$targetCount) {
+            $targetCount = new PostCount();
+            $targetCount
+                ->setPostDate($postedDate)
+                ->setPostCount(0)
+            ;
+        }
+
+        return $targetCount;
     }
 
     // /**
